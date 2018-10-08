@@ -72,7 +72,7 @@ spec:
         input 'Deploy to Production?'
          milestone(1)
         container('kubectl') {
-	        sh("echo ${imageTag}")       
+	  sh("kubectl delete --all pods --namespace=production --now")      
           sh("kubectl get ns ${env.BRANCH_NAME} || kubectl create ns ${env.BRANCH_NAME}")
           sh("kubectl --namespace=production apply -f k8s/services/")
           sh("echo http://`kubectl --namespace=production get service/train-schedule-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}'`:8080 > ${feSvcName}")
