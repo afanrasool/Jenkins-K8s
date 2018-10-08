@@ -1,0 +1,39 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: train-schedule-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: train-schedule
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8080
+    targetPort: 8080
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: train-schedule-deployment
+  labels:
+    app: train-schedule
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: train-schedule
+  template:
+    metadata:
+      labels:
+        app: train-schedule
+    spec:
+      containers:
+      - name: train-schedule
+        image: gcr.io/ext-ci-project/train-schedule:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+
